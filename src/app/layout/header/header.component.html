@@ -1,0 +1,90 @@
+<header class="bg-white shadow-md relative z-50">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+        <div class="flex lg:flex-1">
+            <a href="#" class="-m-1.5 p-1.5">
+                <div class="text-2xl font-bold text-blue-600">Pluto<span class="text-gray-800">Blogger</span></div>
+            </a>
+        </div>
+
+        <!-- Hamburger Button -->
+        <div class="flex lg:hidden">
+            <button (click)="toggleMobileMenu()" type="button"
+                class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
+                <span class="sr-only">Open main menu</span>
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Desktop Nav -->
+        <div class="hidden lg:flex lg:gap-x-12">
+            <button type="button" class="flex items-center gap-x-1 text-sm font-semibold text-gray-900">
+                Product
+                <svg class="size-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
+            <a href="#" class="text-sm font-semibold text-gray-900 cursor">Features</a>
+            <a href="#" class="text-sm font-semibold text-gray-900 cursor">Marketplace</a>
+            <a href="#" class="text-sm font-semibold text-gray-900 cursor">About</a>
+        </div>
+
+        <!-- Theme Toggler -->
+         <app-theme-toggle></app-theme-toggle>
+        <!-- Desktop Login -->
+        <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+            <a routerLink="/login" class="text-sm font-semibold text-gray-900">Log in <span aria-hidden="true">&rarr;</span></a>
+        </div>
+    </nav>
+
+    <!-- Backdrop -->
+    <div *ngIf="mobileMenuOpen" class="fixed inset-0 z-40 bg-black/50" (click)="closeMobileMenu()"></div>
+
+    <!-- Mobile Menu -->
+    <div *ngIf="mobileMenuOpen"
+        class="lg:hidden fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-white p-6 overflow-y-auto">
+        <div class="flex items-center justify-between">
+            <a href="#" class="-m-1.5 p-1.5">
+                <div class="text-2xl font-bold text-blue-600">Pluto<span class="text-gray-800">Blogger</span></div>
+            </a>
+            <button (click)="closeMobileMenu()" type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700">
+                <span class="sr-only">Close menu</span>
+                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="mt-6 divide-y divide-gray-100">
+            <div class="space-y-2 py-6">
+                <button type="button"
+                    class="w-full flex items-center justify-between text-base font-semibold text-gray-900">
+                    Product
+                    <svg class="size-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+
+                <div class="ml-6 space-y-1">
+                    <a href="#" class="block text-sm text-gray-700 hover:underline">Analytics</a>
+                    <a href="#" class="block text-sm text-gray-700 hover:underline">Engagement</a>
+                    <a href="#" class="block text-sm text-gray-700 hover:underline">Security</a>
+                </div>
+
+                <a href="#" class="block text-base font-semibold text-gray-900 hover:underline">Features</a>
+                <a href="#" class="block text-base font-semibold text-gray-900 hover:underline">Marketplace</a>
+                <a href="#" class="block text-base font-semibold text-gray-900 hover:underline">Company</a>
+            </div>
+
+            <div class="py-6">
+                <a routerLink="/login" class="block text-base font-semibold text-gray-900 hover:underline">Log in</a>
+            </div>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,28 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="bg-white p-10 rounded shadow-md">
+    <h2 class="text-2xl font-bold mb-4">Login</h2>
+
+    <!-- Google Login -->
+    <button (click)="loginWithGoogle()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mb-4">
+      Sign in with Google
+    </button>
+
+    <hr class="my-4" />
+
+    <!-- Phone Login -->
+    <input [(ngModel)]="phoneNumber" type="text" placeholder="Phone Number" class="border p-2 w-full mb-2" />
+    <div id="recaptcha-container"></div>
+
+    <button (click)="loginWithPhone()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
+      Send OTP
+    </button>
+
+    <!-- OTP Verification -->
+    <div *ngIf="showOtpInput" class="mt-4">
+      <input [(ngModel)]="otp" type="text" placeholder="Enter OTP" class="border p-2 w-full mb-2" />
+      <button (click)="verifyOtp()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full">
+        Verify OTP
+      </button>
+    </div>
+  </div>
+</div>

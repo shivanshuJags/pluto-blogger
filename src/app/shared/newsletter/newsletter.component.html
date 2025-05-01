@@ -1,0 +1,20 @@
+<section class="bg-[#f9f8fc] py-20 text-center px-4">
+    <div class="max-w-2xl mx-auto">
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">Subscribe to our Newsletter</h2>
+        <p class="text-gray-600 mb-8">
+            Subscribe to our email newsletter to get the latest posts delivered right to your email.
+        </p>
+
+        <div
+            class="bg-white p-1 rounded-xl shadow-xl max-w-xl mx-auto flex flex-col sm:flex-row gap-2 sm:gap-0 justify-between items-center">
+            <input type="email" [(ngModel)]="email" placeholder="Enter Your Email"
+                class="flex-1 p-4 rounded-xl sm:rounded-l-xl sm:rounded-r-none outline-none text-gray-700" />
+            <button (click)="subscribe()"
+                class="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold px-6 py-3 rounded-xl sm:rounded-r-xl sm:rounded-l-none transition duration-300">
+                Subscribe
+            </button>
+        </div>
+
+        <p class="mt-4 text-sm text-gray-500 font-semibold">Pure inspiration, zero spam ✨</p>
+    </div>
+</section>
