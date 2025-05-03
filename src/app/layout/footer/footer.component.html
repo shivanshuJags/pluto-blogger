@@ -1,62 +1,61 @@
-<footer class="bg-[#f9f8fc] text-[#1a1a2e] py-12 px-4">
-    <div class="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-
-        <!-- Brand Section -->
-        <div class="space-y-4">
-            <div class="flex items-center gap-3">
-                <div class="bg-[#2e2e64] p-2 rounded-xl">
-                    <img src="assets/logo.svg" alt="logo" class="w-6 h-6">
-                </div>
-                <span class="text-lg font-bold">REVISION</span>
-            </div>
-            <p class="text-sm text-gray-600 max-w-xs">
-                Welcome to ultimate source for fresh perspectives! Explore curated content to enlighten, entertain and
-                engage global readers.
-            </p>
-            <div class="flex gap-4 text-[#2e2e64] text-xl mt-3">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-x-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-            </div>
+<footer class="bg-[#f9f8fc] text-[#1a1a2e] p-12">
+    <div class="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-4 md:gap-20">
+      
+      <!-- Brand Section -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="bg-[#2e2e64] p-2 rounded-xl">
+            <img src="assets/logo.svg" alt="logo" class="w-6 h-6">
+          </div>
+          <span class="text-lg font-bold">PlutoBlogger</span>
         </div>
-
-        <!-- Navigation: Homepages -->
-        <div>
-            <h4 class="text-sm font-semibold uppercase text-gray-500 mb-3">Homepages</h4>
-            <ul class="space-y-2 text-[15px]">
-                <li><a href="#">Classic List</a></li>
-                <li><a href="#">Classic Grid</a></li>
-                <li><a href="#">Classic Overlay</a></li>
-                <li><a href="#">Hero Slider</a></li>
-                <li><a href="#">Featured Posts</a></li>
-            </ul>
+        <p class="text-sm text-gray-600 max-w-xs">
+          Welcome to ultimate source for fresh perspectives! Explore curated content to enlighten, entertain and engage global readers.
+        </p>
+        <div class="flex gap-4 text-[#2e2e64] text-xl mt-3">
+         <app-social [iconSize]="20"></app-social>
         </div>
-
-        <!-- Navigation: Categories -->
-        <div>
-            <h4 class="text-sm font-semibold uppercase text-gray-500 mb-3">Categories</h4>
-            <ul class="space-y-2 text-[15px]">
-                <li><a href="#">Technology</a></li>
-                <li><a href="#">Travel</a></li>
-                <li><a href="#">Sport</a></li>
-                <li><a href="#">Business</a></li>
-            </ul>
+      </div>
+  
+      <!-- Unified Navigation Sections -->
+      <ng-container *ngFor="let section of footerSections; let i = index">
+        <div class="md:space-y-2">
+          
+          <!-- Section Header -->
+          <button 
+            class="w-full flex justify-between items-center py-3 md:py-0 md:cursor-default" 
+            (click)="toggleSection(i)" 
+            [ngClass]="{ 'md:cursor-default': true }">
+            <span class="text-sm font-bold uppercase text-gray-500">{{ section.title }}</span>
+            
+            <!-- Chevron icon only on mobile -->
+            <svg 
+              class="w-4 h-4 md:hidden transform transition-transform duration-300"
+              [ngClass]="{ 'rotate-180': openSection === i }"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+  
+          <!-- Links List -->
+          <ul 
+            class="space-y-2 text-[15px] text-gray-700"
+            [ngClass]="{
+              'hidden md:block': openSection !== i,
+              'block': openSection === i,
+              'md:block': true
+            }">
+            <li *ngFor="let link of section.links">
+              <a class="font-semibold" href="{{ link.href }}">{{ link.label }}</a>
+            </li>
+          </ul>
         </div>
-
-        <!-- Navigation: Pages -->
-        <div>
-            <h4 class="text-sm font-semibold uppercase text-gray-500 mb-3">Pages</h4>
-            <ul class="space-y-2 text-[15px]">
-                <li><a href="#">About</a></li>
-                <li><a href="#">Categories</a></li>
-                <li><a href="#">Contacts</a></li>
-            </ul>
-        </div>
+      </ng-container>
     </div>
-
+  
     <!-- Bottom Row -->
-    <div class="mt-10 max-w-screen-xl mx-auto flex justify-between items-center text-sm text-gray-500 relative">
-        <p>© 2024 — Revision. All Rights Reserved.</p>
+    <div class="mt-6 max-w-screen-xl mx-auto flex justify-center md:justify-between items-center text-sm text-gray-500 relative">
+      <p class="font-extrabold text-center">© 2025 — PlutoBlogger. All Rights Reserved.</p>
     </div>
-</footer>
+  </footer>
+  

@@ -1,13 +1,16 @@
-<div class="max-w-screen-xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
+<section class="px-12">
+  <app-blog-carousel></app-blog-carousel>
+
+  <div class="max-w-screen-xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
     <!-- Left Blog Section -->
     <div class="lg:col-span-8 space-y-10">
       <app-blog-list></app-blog-list>
     </div>
-  
+
     <!-- Right Sidebar Section -->
     <div class="lg:col-span-4 space-y-6">
       <app-blog-card></app-blog-card>
-  
+
       <!-- You can add another card here like featured posts -->
       <div class="bg-white dark:bg-gray-800 shadow-md rounded-2xl p-6">
         <h4 class="font-semibold mb-4 text-gray-800 dark:text-white">Featured Posts</h4>
@@ -18,4 +21,4 @@
       </div>
     </div>
   </div>
-  
+</section>

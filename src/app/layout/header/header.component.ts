@@ -10,7 +10,8 @@ import { ThemeToggleComponent } from '../../shared/theme-toggle/theme-toggle.com
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  mobileMenuOpen = false;
+  mobileMenuOpen: boolean = false;
+  isDarkMode: boolean = false;
 
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
@@ -18,5 +19,9 @@ export class HeaderComponent {
 
   closeMobileMenu() {
     this.mobileMenuOpen = false;
+  }
+
+  ngOnInit() {
+    this.isDarkMode = document.documentElement.classList.contains('dark');
   }
 }

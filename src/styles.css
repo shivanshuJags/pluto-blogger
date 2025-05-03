@@ -1,4 +1,9 @@
 @import "tailwindcss";
+/* @import 'animate.css/animate.min.css'; */
+
+:root {
+    --cs-color-border: #e1e1e8;
+}
 
 body {
     background-color: #FFFFFF;
@@ -9,4 +14,26 @@ body {
 .dark body {
     background-color: #111827;
     color: #F9FAFB;
+}
+
+.seperator {
+    border-bottom: 1px solid var(--cs-color-border);
+}
+
+button {
+    cursor: pointer;
+}
+
+@keyframes fill {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+.animate-fill {
+    animation: fill 3s linear forwards;
 }

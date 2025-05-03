@@ -1,6 +1,17 @@
-<button class="relative inline-flex"
-         (click)="toggleTheme()">
-    <svg width="30" height="30">
-        <path fill="currentColor" d="M 23, 5 A 12 12 0 1 0 23, 25 A 12 12 0 0 1 23, 5" />
-    </svg>
-</button>
+<!-- Toggle Container -->
+<div class="relative w-18 h-8 bg-gray-200 dark:bg-gray-800 rounded-full cursor-pointer"
+     (click)="toggleTheme()">
+
+  <!-- Round active indicator -->
+  <div class="absolute top-1 left-1 w-6 h-6 rounded-full bg-white shadow-md dark:bg-gray-900 transform transition-transform duration-300"
+       [ngStyle]="{ transform: isDarkMode ? 'translateX(40px)' : 'translateX(0px)' }">
+  </div>
+
+  <!-- Icons -->
+  <div class="absolute top-1/2 left-4 transform -translate-x-1/2 -translate-y-1/2 z-10">
+    <lucide-icon [img]="SunIcon" class="w-4 h-5 text-yellow-500 hover:opacity-70 transition-opacity"></lucide-icon>
+  </div>
+  <div class="absolute top-1/2 right-4 transform translate-x-1/2 -translate-y-1/2 z-10">
+    <lucide-icon [img]="MoonIcon" class="w-4 h-5 text-indigo-300 hover:opacity-70 transition-opacity"></lucide-icon>
+  </div>
+</div>

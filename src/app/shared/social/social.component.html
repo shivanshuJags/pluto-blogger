@@ -1,0 +1,7 @@
+<div class="flex gap-6 items-center my-5">
+    <a *ngFor="let link of socialLinks" [href]="link.href" target="_blank" rel="noopener" class="transition-colors flex justify-center items-center duration-300 text-zinc-800 dark:text-zinc-200 h-[30px] w-[30px]
+             hover:text-blue-600 dark:hover:text-emerald-500">
+        <lucide-icon [img]="link.symbol" [name]="link.icon" [size]="iconSize"
+            class="transition-transform duration-300 hover:scale-110"></lucide-icon>
+    </a>
+</div>

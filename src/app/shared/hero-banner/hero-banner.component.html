@@ -1,4 +1,5 @@
-<section class="text-center py-16 px-6 bg-light-background dark:bg-dark-background transition-colors duration-300">
+<section
+    class="text-center py-16 px-6 bg-light-background dark:bg-dark-background transition-colors duration-300 seperator">
     <h1 class="text-4xl md:text-5xl font-extrabold text-dark-text dark:text-light-text">
         Heartfelt
         <span class="text-indigo-500">Reflections</span>:
@@ -8,4 +9,17 @@
         Revision Welcomes to ultimate source for fresh perspectives! Explore curated content to enlighten, entertain and
         engage global readers.
     </p>
+
+    <div class="mt-10 flex justify-center">
+        <div class="relative w-full max-w-md">
+            <input type="text" [(ngModel)]="searchText" placeholder="Search articles, authors..."
+                (keyup.enter)="search()"
+                class="w-full py-3 px-5 pl-12 rounded-xl shadow-lg bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:shadow-2xl transition-all duration-300" />
+            <button (click)="search()"
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-indigo-500 hover:text-indigo-700 transition duration-300"
+                aria-label="Search">
+                <lucide-icon [img]="SearchIcon" class="w-6 h-5"></lucide-icon>
+            </button>
+        </div>
+    </div>
 </section>

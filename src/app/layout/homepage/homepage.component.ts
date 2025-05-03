@@ -6,7 +6,7 @@ import { NewsletterComponent } from '../../shared/newsletter/newsletter.componen
 
 @Component({
   selector: 'app-homepage',
-  imports: [HeroBannerComponent, BadgeComponent, HomeLayoutComponent, NewsletterComponent],
+  imports: [HeroBannerComponent, BadgeComponent, NewsletterComponent],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css'
 })
