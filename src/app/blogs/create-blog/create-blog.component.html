@@ -1,0 +1,69 @@
+<div class="max-w-4xl mx-auto p-6 space-y-6">
+    <h1 class="text-3xl font-bold">Create New Post</h1>
+
+    <!-- Preview Mode -->
+    <div *ngIf="previewMode; else editorForm" class="space-y-6">
+        <h2 class="text-2xl font-semibold">🔍 Preview Your Post</h2>
+        <div class="border p-4 rounded-md bg-white shadow">
+            <p class="text-sm text-gray-600 mb-2">Category: {{ previewData?.category }}</p>
+            <h2 class="text-3xl font-bold mb-4">{{ previewData?.title }}</h2>
+            <!-- Tailwind Typography applied here -->
+            <div class="prose max-w-none" [innerHTML]="getSanitizedContent(previewData?.editorContent)"></div>
+        </div>
+
+        <div class="flex gap-4 mt-6">
+            <button (click)="confirmPublish()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                Confirm & Publish
+            </button>
+            <button (click)="editPost()" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
+                Edit Post
+            </button>
+        </div>
+    </div>
+
+    <!-- Editor Form -->
+    <ng-template #editorForm>
+        <form [formGroup]="postForm" (ngSubmit)="publishNow()" class="space-y-6">
+            <input type="text" formControlName="title" placeholder="Your post title..."
+                class="w-full p-3 border border-gray-300 rounded-md text-lg font-semibold" />
+
+            <select formControlName="category" class="p-2 border border-gray-300 rounded-md w-full">
+                <option disabled value="">Select category</option>
+                <option>Technology</option>
+                <option>Lifestyle</option>
+                <option>Travel</option>
+                <option>Finance</option>
+            </select>
+
+            <div class="border border-gray-300 rounded-md overflow-hidden">
+                <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+                <button type="button" class="mt-2 mb-2 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                    (click)="triggerImageUpload()">
+                    📷 Upload Image
+                </button>
+                <ngx-editor [editor]="editor" formControlName="editorContent" class="min-h-[300px] p-4"></ngx-editor>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <label class="text-sm font-medium">Schedule for:</label>
+                <input type="datetime-local" formControlName="scheduleDate"
+                    class="p-2 border border-gray-300 rounded-md" />
+                <button type="button" (click)="schedulePost()"
+                    class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
+                    Schedule
+                </button>
+            </div>
+
+            <div class="flex gap-4">
+                <button type="button" (click)="saveAsDraft()"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                    Save Draft
+                </button>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    [disabled]="postForm.invalid">
+                    Publish
+                </button>
+            </div>
+        </form>
+    </ng-template>
+</div>

@@ -27,3 +27,7 @@
 .animate-fill {
   animation: fill 3s linear forwards;
 }
+
+.animate-progress {
+  transition: width 50ms linear;
+}

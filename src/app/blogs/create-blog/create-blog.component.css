@@ -1,0 +1,22 @@
+ngx-editor .NgxEditor__Content {
+    min-height: 300px;
+    padding: 1rem;
+}
+
+ngx-editor .NgxEditor__Content h1,
+ngx-editor .NgxEditor__Content h2,
+ngx-editor .NgxEditor__Content h3 {
+    font-weight: bold;
+}
+
+ngx-editor .NgxEditor__Content p {
+    text-align: inherit;
+}
+
+ngx-editor .NgxEditor__Content[style*="text-align:center"] {
+    text-align: center;
+}
+
+ngx-editor .NgxEditor__Content[style*="text-align:right"] {
+    text-align: right;
+}
