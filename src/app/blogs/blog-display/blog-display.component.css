@@ -1,0 +1,4 @@
+::ng-deep app-social .social-wrapper {
+    flex-direction: column;
+    gap: 18px;
+}

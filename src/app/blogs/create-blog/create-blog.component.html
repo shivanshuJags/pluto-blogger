@@ -27,13 +27,34 @@
             <input type="text" formControlName="title" placeholder="Your post title..."
                 class="w-full p-3 border border-gray-300 rounded-md text-lg font-semibold" />
 
-            <select formControlName="category" class="p-2 border border-gray-300 rounded-md w-full">
-                <option disabled value="">Select category</option>
-                <option>Technology</option>
-                <option>Lifestyle</option>
-                <option>Travel</option>
-                <option>Finance</option>
-            </select>
+            <!-- Description Input -->
+            <textarea formControlName="description" placeholder="Short description..."
+                class="w-full p-3 border border-gray-300 rounded-md text-base" rows="3"></textarea>
+
+            <div class="relative">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Select Categories</label>
+
+                <!-- Selected categories as tags -->
+                <div class="flex flex-wrap gap-2 mb-2">
+                    <span *ngFor="let catId of postForm.get('category')?.value"
+                        class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full flex items-center gap-1">
+                        {{ getCategoryNameById(catId) }}
+                        <button type="button" (click)="removeCategory(catId)"
+                            class="text-blue-600 hover:text-red-600 font-bold">
+                            ×
+                        </button>
+                    </span>
+                </div>
+
+                <!-- Dropdown to add categories -->
+                <select (change)="addCategory($event)" class="w-full p-2 border rounded-md">
+                    <option disabled selected>Select category to add</option>
+                    <option *ngFor="let cat of categories" [value]="cat.id"
+                        [disabled]="postForm.get('category')?.value.includes(cat.id)">
+                        {{ cat.name }}
+                    </option>
+                </select>
+            </div>
 
             <div class="border border-gray-300 rounded-md overflow-hidden">
                 <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
@@ -41,7 +62,7 @@
                     (click)="triggerImageUpload()">
                     📷 Upload Image
                 </button>
-                <ngx-editor [editor]="editor" formControlName="editorContent" class="min-h-[300px] p-4"></ngx-editor>
+                <ngx-editor [editor]="editor" formControlName="editorContent" class="min-h-[700px] p-4"></ngx-editor>
             </div>
 
             <div class="flex items-center gap-4">

@@ -20,3 +20,11 @@ ngx-editor .NgxEditor__Content[style*="text-align:center"] {
 ngx-editor .NgxEditor__Content[style*="text-align:right"] {
     text-align: right;
 }
+
+::ng-deep ngx-editor .NgxEditor {
+    margin: 1rem;
+}
+
+::ng-deep ngx-editor .ProseMirror {
+    min-height: 500px;
+}

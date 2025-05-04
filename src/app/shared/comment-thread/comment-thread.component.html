@@ -1,0 +1,39 @@
+<section class="space-y-6">
+    <ng-container *ngFor="let comment of comments">
+        <!-- Main Comment -->
+        <div class="flex gap-4 items-start">
+            <img [src]="comment.avatar" alt="avatar" class="w-10 h-10 rounded-full object-cover" />
+
+            <div class="flex-1 space-y-1">
+                <div class="text-sm text-gray-900 font-semibold">
+                    {{ comment.name }}
+                    <span class="text-gray-500 font-normal">on {{ comment.date }}</span>
+                </div>
+                <p class="text-gray-700 text-sm">{{ comment.text }}</p>
+
+                <button class="text-indigo-600 text-sm font-semibold hover:underline">Reply</button>
+
+                <!-- Replies -->
+                <div *ngIf="comment.replies?.length" class="pl-6 border-l border-gray-200 mt-4 space-y-4">
+                    <ng-container *ngFor="let reply of comment.replies">
+                        <div class="flex gap-4 items-start">
+                            <img [src]="reply.avatar" alt="avatar" class="w-10 h-10 rounded-full object-cover" />
+
+                            <div class="flex-1 space-y-1">
+                                <div class="text-sm text-gray-900 font-semibold">
+                                    {{ reply.name }}
+                                    <span class="text-gray-500 font-normal">on {{ reply.date }}</span>
+                                </div>
+                                <p class="text-gray-700 text-sm">{{ reply.text }}</p>
+
+                                <button class="text-indigo-600 text-sm font-semibold hover:underline">Reply</button>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-gray-200 mt-6" />
+    </ng-container>
+</section>
