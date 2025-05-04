@@ -3,12 +3,13 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Editor, NgxEditorMenuComponent, NgxEditorModule, Toolbar } from 'ngx-editor';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { BlogQueryService } from '../../core/services/graphql/blog-query.service';
 
 @Component({
   selector: 'app-create-blog',
   imports: [CommonModule, ReactiveFormsModule, NgxEditorModule, NgxEditorMenuComponent],
   templateUrl: './create-blog.component.html',
-  styleUrl: './create-blog.component.css'
+  styleUrl: './create-blog.component.css',
 })
 export class CreateBlogComponent {
   editor!: Editor;
@@ -17,6 +18,7 @@ export class CreateBlogComponent {
 
   previewMode = false;
   previewData: any = null;
+  categories: Array<{ id: string; name: string }> = [];
 
   toolbar: Toolbar = [
     ['bold', 'italic'],
@@ -29,15 +31,28 @@ export class CreateBlogComponent {
     ['align_left', 'align_center', 'align_right', 'align_justify'],
   ];
 
-  constructor(private fb: FormBuilder,  private sanitizer: DomSanitizer) { }
+  constructor(private fb: FormBuilder, private sanitizer: DomSanitizer,
+    private blogQueryService: BlogQueryService
+  ) { }
 
   ngOnInit(): void {
     this.editor = new Editor();
     this.postForm = this.fb.group({
       title: ['', Validators.required],
-      category: ['', Validators.required],
+      category: [[], Validators.required],
+      description: ['', Validators.required],
       scheduleDate: [''],
-      editorContent: ['', Validators.required],
+      editorContent: [null, Validators.required],
+    });
+
+    this.blogQueryService.getCategories().subscribe({
+      next: (cats) => {
+        this.categories = cats;
+        console.log(this.categories);
+      },
+      error: (err) => {
+        console.error('Failed to load categories:', err);
+      },
     });
   }
 
@@ -49,6 +64,27 @@ export class CreateBlogComponent {
     this.status = 'draft';
     console.log('Saved as draft:', this.postForm.value);
   }
+
+  addCategory(event: Event) {
+    const selectedId = (event.target as HTMLSelectElement).value;
+    const control = this.postForm.get('category');
+    if (selectedId && !control?.value.includes(selectedId)) {
+      control?.setValue([...control.value, selectedId]);
+    }
+    // Reset selected UI
+    (event.target as HTMLSelectElement).selectedIndex = 0;
+  }
+
+  removeCategory(id: string) {
+    const control = this.postForm.get('category');
+    control?.setValue(control.value.filter((catId: string) => catId !== id));
+  }
+
+  getCategoryNameById(id: string): string {
+    const category = this.categories.find(cat => cat.id === id);
+    return category?.name || 'Unknown';
+  }
+
 
   schedulePost() {
     if (this.postForm.valid) {
@@ -67,9 +103,44 @@ export class CreateBlogComponent {
   }
 
   confirmPublish() {
-    console.log('✅ Confirmed & published:', this.previewData);
-    this.previewMode = false;
-    this.postForm.reset();
+    const { title, category, editorContent, description } = this.previewData;
+
+    const slug = title.toLowerCase().replace(/\s+/g, '-');
+    const formattedRichText = {
+      type: 'doc',
+      content: editorContent.content,
+    };
+
+    // Map full category info (id, name, slug)
+    const selectedCategories = category.map((catId: string) => {
+      const found = this.categories.find(cat => cat.id === catId);
+      return {
+        id: found?.id,
+        name: found?.name,
+        slug: found?.name.toLowerCase().replace(/\s+/g, '-'),
+      };
+    });
+
+    const categorySlugs = selectedCategories.map((cat: { slug: any; }) => cat.slug);
+
+    const post = {
+      title,
+      slug,
+      description,
+      content: formattedRichText,
+      categories: selectedCategories,
+      categorySlugs: categorySlugs,
+      createdAt: new Date(),
+      status: this.status,
+    };
+
+    this.blogQueryService.createPost(post).then((res) => {
+      console.log('Blog stored in Firestore:', res);
+      this.previewMode = false;
+      this.postForm.reset();
+    }).catch((err) => {
+      console.error('Error saving post to Firestore:', err);
+    });
   }
 
   editPost() {
