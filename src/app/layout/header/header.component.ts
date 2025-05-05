@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
+
 import { ThemeToggleComponent } from '../../shared/theme-toggle/theme-toggle.component';
+import { Observable } from 'rxjs';
+import { selectProfilePhoto, selectUserLoggedIn } from '../../utils/store/auth/auth.selectors';
+import { logout } from '../../utils/store/auth/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -9,9 +14,17 @@ import { ThemeToggleComponent } from '../../shared/theme-toggle/theme-toggle.com
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
+
 export class HeaderComponent {
-  mobileMenuOpen: boolean = false;
-  isDarkMode: boolean = false;
+  private store = inject(Store);
+
+  mobileMenuOpen = false;
+  isDarkMode = false;
+  showDropdown = false;
+
+  profilePhoto$: Observable<string | null> = this.store.select(selectProfilePhoto);
+  isLoggedIn$: Observable<boolean> = this.store.select(selectUserLoggedIn);
+  fallbackPhoto = 'assets/images/next_1.webp';
 
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
@@ -19,6 +32,23 @@ export class HeaderComponent {
 
   closeMobileMenu() {
     this.mobileMenuOpen = false;
+  }
+
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+  }
+
+  closeDropdown() {
+    this.showDropdown = false;
+  }
+
+  onImgError(event: Event) {
+    (event.target as HTMLImageElement).src = this.fallbackPhoto;
+  }
+
+  logout() {
+    this.store.dispatch(logout());
+    this.closeDropdown();
   }
 
   ngOnInit() {
