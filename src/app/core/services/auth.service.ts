@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { Auth, GoogleAuthProvider, signInWithPhoneNumber, signInWithPopup, signOut } from '@angular/fire/auth';
 import { getAuth, RecaptchaVerifier, ConfirmationResult } from 'firebase/auth';
+
+import * as AuthActions from '../../utils/store/auth/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -10,17 +14,34 @@ export class AuthService {
   private recaptchaVerifier!: RecaptchaVerifier;
   private confirmationResult!: ConfirmationResult;
 
-  constructor(private auth: Auth, private router: Router) { }
+  private userSubject = new BehaviorSubject<any>(this.getUserData());
+  user$ = this.userSubject.asObservable();
 
-  async signInWithGoogle() {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(this.auth, provider);
-      console.log('User:', result.user);
-      this.router.navigate(['/']);
-    } catch (error) {
-      console.error('Google Sign-In Error:', error);
-    }
+  constructor(private auth: Auth, private router: Router, private store: Store) { }
+
+  signInWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+
+    return signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        if (user) {
+          const userData = {
+            uid: user.uid,
+            email: user.email!,
+            name: user.displayName!,
+            photoURL: user.photoURL!,
+          };
+          sessionStorage.setItem('user', JSON.stringify(userData));
+          this.userSubject.next(user);
+          this.store.dispatch(AuthActions.setUser(userData));
+          this.router.navigate(['/']);
+        }
+      })
+      .catch((error) => {
+        console.error('Google login error:', error);
+      });
   }
 
   setupRecaptcha(containerId: string) {
@@ -55,7 +76,15 @@ export class AuthService {
 
   logout() {
     return signOut(this.auth).then(() => {
+      sessionStorage.removeItem('user');
+      this.store.dispatch(AuthActions.clearUser());
+      this.userSubject.next(null);
       this.router.navigate(['/login']);
     });
+  }
+
+  getUserData() {
+    const userData = sessionStorage.getItem('user');
+    return userData ? JSON.parse(userData) : null;
   }
 }
