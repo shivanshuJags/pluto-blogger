@@ -1,27 +1,72 @@
-<div class="flex items-center justify-center min-h-screen bg-gray-100">
-  <div class="bg-white p-10 rounded shadow-md">
-    <h2 class="text-2xl font-bold mb-4">Login</h2>
+<div class="bg-[#f9f8fc] min-h-screen flex items-center justify-center dark:bg-dark-background px-4">
+  <div class="bg-white dark:bg-dark-background rounded-3xl shadow-xl p-6 max-w-md w-full text-center">
+    <div class="bg-light-muted dark:bg-dark-code w-12 h-12 rounded-xl mx-auto flex items-center justify-center mb-2">
+      <lucide-icon [img]="LogInIcon" class="w-8 h-8"></lucide-icon>
+    </div>
 
-    <!-- Google Login -->
-    <button (click)="loginWithGoogle()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mb-4">
-      Sign in with Google
-    </button>
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+      <h2 class="text-2xl font-bold text-light-text dark:text-dark-text mb-2">
+        {{ isSigninFlow ? 'Sign in' : 'Sign up' }}
+      </h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
+        Make a new doc to bring your words, data, and teams together. For free
+      </p>
 
-    <hr class="my-4" />
+      <!-- Email input -->
+      <input type="email" formControlName="email" placeholder="Email"
+        [ngClass]="{ 'border-red-500': f['email'].invalid && f['email'].touched }"
+        class="w-full mb-3 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-light-accent dark:bg-dark-background dark:text-white" />
+      <div *ngIf="f['email'].invalid && f['email'].touched" class="text-left text-sm text-red-600 mb-2">
+        <span *ngIf="f['email'].errors?.['required']">Email is required.</span>
+        <span *ngIf="f['email'].errors?.['email']">Enter a valid email.</span>
+      </div>
 
-    <!-- Phone Login -->
-    <input [(ngModel)]="phoneNumber" type="text" placeholder="Phone Number" class="border p-2 w-full mb-2" />
-    <div id="recaptcha-container"></div>
+      <!-- Password input -->
+      <input type="password" formControlName="password" placeholder="Password"
+        [ngClass]="{ 'border-red-500': f['password'].invalid && f['password'].touched }"
+        class="w-full mb-3 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-light-accent dark:bg-dark-background dark:text-white" />
+      <div *ngIf="f['password'].invalid && f['password'].touched" class="text-left text-sm text-red-600 mb-2">
+        <span *ngIf="f['password'].errors?.['required']">Password is required.</span>
+        <span *ngIf="f['password'].errors?.['minlength']">Minimum 6 characters required.</span>
+      </div>
 
-    <button (click)="loginWithPhone()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
-      Send OTP
-    </button>
+      <input *ngIf="!isSigninFlow" type="password" formControlName="confirmPassword" placeholder="Confirm Password"
+        [ngClass]="{ 'border-red-500': f['confirmPassword'].invalid && f['confirmPassword'].touched }"
+        class="w-full mb-3 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-light-accent dark:bg-dark-background dark:text-white" />
+      <div *ngIf="!isSigninFlow && f['confirmPassword'].touched && f['confirmPassword'].invalid"
+        class="text-left text-sm text-red-600 mb-2">
+        <span *ngIf="f['confirmPassword'].errors?.['required']">Confirm Password is required.</span>
+        <span *ngIf="f['confirmPassword'].errors?.['mismatch']">Passwords must match.</span>
+      </div>
 
-    <!-- OTP Verification -->
-    <div *ngIf="showOtpInput" class="mt-4">
-      <input [(ngModel)]="otp" type="text" placeholder="Enter OTP" class="border p-2 w-full mb-2" />
-      <button (click)="verifyOtp()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full">
-        Verify OTP
+      <div class="text-right text-sm text-light-accent dark:text-dark-accent mb-4 cursor-pointer hover:underline">
+        Forgot password?
+      </div>
+
+      <button type="submit"
+        class="w-full py-2 bg-light-text text-white rounded-md font-semibold bg-black hover:bg-gray-800 transition">
+        {{ isSigninFlow ? 'Sign In' : 'Sign Up' }}
+      </button>
+    </form>
+
+    <!-- Toggle Sign In/Sign Up -->
+    <div class="my-4 text-sm text-gray-600 text-center">
+      — Or
+      <span class="text-blue-600 font-semibold hover:underline cursor-pointer" (click)="toggleFlow()">
+        {{ isSigninFlow ? 'Sign up' : 'Sign in' }}
+      </span>
+      with —
+    </div>
+
+    <!-- Social buttons -->
+    <div class="flex justify-center gap-4">
+      <button (click)="loginWithGoogle()"
+        class="bg-white dark:bg-dark-background border border-gray-300 dark:border-gray-600 p-2 rounded-full">
+        <img src="https://img.icons8.com/color/48/google-logo.png" class="w-6 h-6" alt="Google" />
+      </button>
+      <button (click)="loginWithGitHub()"
+        class="bg-white dark:bg-dark-background border border-gray-300 dark:border-gray-600 p-2 rounded-full">
+        <img src="https://img.icons8.com/ios-glyphs/30/000000/github.png" class="w-6 h-6" alt="GitHub" />
       </button>
     </div>
   </div>

@@ -7,6 +7,7 @@ import { ThemeToggleComponent } from '../../shared/theme-toggle/theme-toggle.com
 import { Observable } from 'rxjs';
 import { selectProfilePhoto, selectUserLoggedIn } from '../../utils/store/auth/auth.selectors';
 import { logout, setUser } from '../../utils/store/auth/auth.actions';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -17,6 +18,7 @@ import { logout, setUser } from '../../utils/store/auth/auth.actions';
 
 export class HeaderComponent {
   private store = inject(Store);
+  constructor(private authService: AuthService) { }
 
   mobileMenuOpen = false;
   isDarkMode = false;
@@ -48,6 +50,7 @@ export class HeaderComponent {
 
   logout() {
     this.store.dispatch(logout());
+    this.authService.logout();
     this.closeDropdown();
   }
 

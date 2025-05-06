@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Auth, GoogleAuthProvider, signInWithPhoneNumber, signInWithPopup, signOut } from '@angular/fire/auth';
-import { getAuth, RecaptchaVerifier, ConfirmationResult } from 'firebase/auth';
+import { getAuth, RecaptchaVerifier, ConfirmationResult, createUserWithEmailAndPassword, UserCredential, signInWithEmailAndPassword, GithubAuthProvider } from 'firebase/auth';
 
 import * as AuthActions from '../../utils/store/auth/auth.actions';
 
@@ -18,6 +18,55 @@ export class AuthService {
   user$ = this.userSubject.asObservable();
 
   constructor(private auth: Auth, private router: Router, private store: Store) { }
+
+  async signUpWithEmail(email: string, password: string): Promise<UserCredential> {
+    const auth = getAuth();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const userData = {
+        uid: user.uid,
+        email: user.email!,
+        name: user.displayName || '',
+        photoURL: user.photoURL || '',
+      };
+
+      sessionStorage.setItem('user', JSON.stringify(userData));
+      this.userSubject.next(user);
+      this.store.dispatch(AuthActions.setUser(userData));
+
+      return userCredential;
+    } catch (error) {
+      console.error('Email sign-up error:', error);
+      throw error;
+    }
+  }
+
+  async signInWithEmail(email: string, password: string): Promise<UserCredential> {
+    const auth = getAuth();
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const userData = {
+        uid: user.uid,
+        email: user.email!,
+        name: user.displayName || '',
+        photoURL: user.photoURL || '',
+      };
+
+      sessionStorage.setItem('user', JSON.stringify(userData));
+      this.userSubject.next(user);
+      this.store.dispatch(AuthActions.setUser(userData));
+      this.router.navigate(['/']);
+
+      return userCredential;
+    } catch (error) {
+      console.error('Email sign-in error:', error);
+      throw error;
+    }
+  }
 
   signInWithGoogle() {
     const provider = new GoogleAuthProvider();
@@ -41,6 +90,29 @@ export class AuthService {
       })
       .catch((error) => {
         console.error('Google login error:', error);
+      });
+  }
+
+  signInWithGitHub(): void {
+    const provider = new GithubAuthProvider();
+    const auth = getAuth();
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        const userData = {
+          uid: user.uid,
+          email: user.email!,
+          name: user.displayName || '',
+          photoURL: user.photoURL || '',
+        };
+        sessionStorage.setItem('user', JSON.stringify(userData));
+        this.userSubject.next(user);
+        this.store.dispatch(AuthActions.setUser(userData));
+        this.router.navigate(['/']);
+      })
+      .catch((error) => {
+        console.error('GitHub login error:', error);
       });
   }
 
