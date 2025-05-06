@@ -6,12 +6,18 @@ export interface Blog {
     image: string;
     srcset?: string;
     categories: Category[];
+    categorySlugs?: string[];
     author: string;
-    date: string;
+    author_slug?: string;
+    date?: string;
     readTime?: string;
     description?: string;
-    createdAt:Timestamp;
-    slug?:string;
+    createdAt: Timestamp;
+    slug?: string;
+    rating?: number;
+    trending?: boolean;
+    [key: string]: any;
+    id?:string;
 }
 
 export interface Category {

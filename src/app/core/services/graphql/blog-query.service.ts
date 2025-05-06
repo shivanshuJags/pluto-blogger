@@ -3,6 +3,7 @@ import { Firestore, collectionData, collection, query, where, setDoc } from '@an
 import { from, map, Observable } from 'rxjs';
 import { BlogPost, Category } from '../types/blogs.type';
 import { addDoc, DocumentData, getDocs } from 'firebase/firestore';
+import { Blog } from '../../../utils/types/blog.type';
 
 @Injectable({
   providedIn: 'root'
@@ -26,19 +27,42 @@ export class BlogQueryService {
     return collectionData(q, { idField: 'slug' });
   }
 
-  getPostBySlug(slug: string) {
+  getPostBySlug(slug: string): Observable<Blog> {
     const postsRef = collection(this.firestore, 'posts');
     const q = query(postsRef, where('slug', '==', slug));
-
+  
     return from(getDocs(q)).pipe(
       map(snapshot => {
         if (!snapshot.empty) {
           const doc = snapshot.docs[0];
-          return { id: doc.id, ...doc.data() } as DocumentData;
+          return { id: doc.id, ...doc.data() } as Blog;
         } else {
           throw new Error('Blog post not found');
         }
       })
     );
+  }
+
+  getAllPosts(): Observable<Blog[]> {
+    const postsRef = collection(this.firestore, 'posts');
+    return collectionData(postsRef, { idField: 'slug' }) as Observable<Blog[]>;
+  }
+
+  getPostsByAuthor(authorName: string): Observable<Blog[]> {
+    const postsRef = collection(this.firestore, 'posts');
+    const q = query(postsRef, where('author', '==', authorName));
+    return collectionData(q, { idField: 'slug' }) as Observable<Blog[]>;
+  }
+
+  getTopRatedPosts(minRating = 4): Observable<Blog[]> {
+    const postsRef = collection(this.firestore, 'posts');
+    const q = query(postsRef, where('rating', '>', minRating));
+    return collectionData(q, { idField: 'slug' }) as Observable<Blog[]>;
+  }
+
+  getTrendingPosts(): Observable<Blog[]> {
+    const postsRef = collection(this.firestore, 'posts');
+    const q = query(postsRef, where('trending', '==', true));
+    return collectionData(q, { idField: 'slug' }) as Observable<Blog[]>;
   }
 }

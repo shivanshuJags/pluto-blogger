@@ -12,6 +12,10 @@ import { provideEffects } from '@ngrx/effects';
 import { CategoryEffects } from './utils/store/categories/category.effects';
 import { categoryReducer } from './utils/store/categories/category.reducer';
 import { authReducer } from './utils/store/auth/auth.reducer';
+import { authorReducer } from './utils/store/author/author.reducer';
+import { AuthorEffects } from './utils/store/author/author.effects';
+import { blogReducer } from './utils/store/blogs/blog.reducer';
+import { BlogEffects } from './utils/store/blogs/blog.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,8 +28,9 @@ export const appConfig: ApplicationConfig = {
     provideAuth(() => getAuth()),
 
     // NgRx Store Setup (just call provideStore ONCE)
-    provideStore({ category: categoryReducer, auth: authReducer }),
-    provideEffects([CategoryEffects]),
+    provideStore({ category: categoryReducer, auth: authReducer, 
+      author: authorReducer, blog: blogReducer, }),
+    provideEffects([CategoryEffects, AuthorEffects, BlogEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
 
     provideAnimations(),

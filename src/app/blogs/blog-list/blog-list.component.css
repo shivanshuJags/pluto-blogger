@@ -1,0 +1,5 @@
+.bloglist-wrapper .blog-item-list:not(:first-child) {
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: var(--cs-color-border);
+}

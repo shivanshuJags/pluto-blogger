@@ -2,7 +2,7 @@
     <ng-container *ngFor="let comment of comments">
         <!-- Main Comment -->
         <div class="flex gap-4 items-start">
-            <img [src]="comment.avatar" alt="avatar" class="w-10 h-10 rounded-full object-cover" />
+            <img src="assets/images/anonymus.png" alt="avatar" class="w-10 h-10 rounded-full object-cover" />
 
             <div class="flex-1 space-y-1">
                 <div class="text-sm text-gray-900 font-semibold">
@@ -17,7 +17,7 @@
                 <div *ngIf="comment.replies?.length" class="pl-6 border-l border-gray-200 mt-4 space-y-4">
                     <ng-container *ngFor="let reply of comment.replies">
                         <div class="flex gap-4 items-start">
-                            <img [src]="reply.avatar" alt="avatar" class="w-10 h-10 rounded-full object-cover" />
+                            <img src="assets/images/anonymus.png" alt="avatar" class="w-10 h-10 rounded-full object-cover" />
 
                             <div class="flex-1 space-y-1">
                                 <div class="text-sm text-gray-900 font-semibold">
