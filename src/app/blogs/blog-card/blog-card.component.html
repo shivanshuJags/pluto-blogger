@@ -1,17 +1,16 @@
-<div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md">
-    <h4 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase mb-3">About</h4>
-    <div class="flex items-center gap-4 mb-3">
-      <img src="assets/images/author.png" alt="Author" class="w-12 h-12 rounded-full object-cover">
-      <div>
-        <p class="font-bold text-gray-900 dark:text-white">Ethan Caldwell</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400 uppercase">Reflective Blogger</p>
-      </div>
-    </div>
-    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
-      Ethan shares thoughtful insights on life, culture, and personal growth. His work explores creativity and experience.
-    </p>
-    <div class="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-3">
-      <span class="text-purple-600">📍</span> Paris, France
+<div *ngIf="author$ | async as author" class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md">
+  <h4 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase mb-3">About</h4>
+  <div class="flex items-center gap-4 mb-3">
+    <img src="assets/images/anonymus.png" alt="Author" class="w-12 h-12 rounded-full object-cover">
+    <div>
+      <p class="font-bold text-gray-900 dark:text-white">{{ author.name }}</p>
+      <p class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ author.profession}}</p>
     </div>
   </div>
-  
+  <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+    {{ author.description }}
+  </p>
+  <div class="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-3">
+    <span class="text-purple-600">📍</span> {{author.location}}
+  </div>
+</div>

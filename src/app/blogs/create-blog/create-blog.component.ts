@@ -48,7 +48,6 @@ export class CreateBlogComponent {
     this.blogQueryService.getCategories().subscribe({
       next: (cats) => {
         this.categories = cats;
-        console.log(this.categories);
       },
       error: (err) => {
         console.error('Failed to load categories:', err);
@@ -62,7 +61,6 @@ export class CreateBlogComponent {
 
   saveAsDraft() {
     this.status = 'draft';
-    console.log('Saved as draft:', this.postForm.value);
   }
 
   addCategory(event: Event) {
@@ -135,7 +133,6 @@ export class CreateBlogComponent {
     };
 
     this.blogQueryService.createPost(post).then((res) => {
-      console.log('Blog stored in Firestore:', res);
       this.previewMode = false;
       this.postForm.reset();
     }).catch((err) => {
