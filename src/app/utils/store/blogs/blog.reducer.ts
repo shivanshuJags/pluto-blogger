@@ -1,12 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
-import { Blog } from '../../types/blog.type';
+import { BlogState } from '../../types/blog.type';
 import * as BlogActions from './blog.actions';
-
-export interface BlogState {
-    blogs: Blog[];
-    selectedBlog: Blog | null;
-    error: any;
-}
 
 export const initialState: BlogState = {
     blogs: [],
@@ -21,5 +15,10 @@ export const blogReducer = createReducer(
     on(BlogActions.loadBlogBySlugSuccess, (state, { blog }) => ({
         ...state,
         selectedBlog: blog
-    }))
+    })),
+    on(BlogActions.createBlogSuccess, (state, { blog }) => ({
+        ...state,
+        blogs: [blog, ...state.blogs],
+    })),
+    on(BlogActions.createBlogFailure, (state, { error }) => ({ ...state, error }))
 );

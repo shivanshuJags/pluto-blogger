@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { BlogState } from './blog.reducer';
+import { BlogState } from '../../types/blog.type';
 
 export const selectBlogState = createFeatureSelector<BlogState>('blog');
 
@@ -25,4 +25,9 @@ export const selectTrendingBlogs = createSelector(
 export const selectSelectedBlog = createSelector(
     selectBlogState,
     state => state.selectedBlog
+);
+
+export const selectBlogError = createSelector(
+    selectBlogState,
+    state => state.error
 );

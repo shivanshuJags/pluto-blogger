@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { ThemeToggleComponent } from '../../shared/theme-toggle/theme-toggle.component';
 import { Observable } from 'rxjs';
 import { selectProfilePhoto, selectUserLoggedIn } from '../../utils/store/auth/auth.selectors';
-import { logout } from '../../utils/store/auth/auth.actions';
+import { logout, setUser } from '../../utils/store/auth/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -53,5 +53,10 @@ export class HeaderComponent {
 
   ngOnInit() {
     this.isDarkMode = document.documentElement.classList.contains('dark');
+    const user = sessionStorage.getItem('user');
+    if (user) {
+      const parsed = JSON.parse(user);
+      this.store.dispatch(setUser(parsed));
+    }
   }
 }

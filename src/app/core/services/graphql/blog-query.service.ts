@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collectionData, collection, query, where, setDoc } from '@angular/fire/firestore';
+import { Firestore, collectionData, collection, query, where, collection as firestoreCollection } from '@angular/fire/firestore';
 import { from, map, Observable } from 'rxjs';
-import { BlogPost, Category } from '../types/blogs.type';
-import { addDoc, DocumentData, getDocs } from 'firebase/firestore';
+import { Category } from '../types/blogs.type';
+import { addDoc, getDocs } from 'firebase/firestore';
 import { Blog } from '../../../utils/types/blog.type';
 
 @Injectable({
@@ -16,9 +16,11 @@ export class BlogQueryService {
     return collectionData(categoriesRef, { idField: 'id' }) as Observable<Category[]>;
   }
 
-  createPost(post: BlogPost) {
-    const postsRef = collection(this.firestore, 'posts');
-    return addDoc(postsRef, post);
+  createPost(post: Blog): Observable<Blog> {
+    const postsRef = firestoreCollection(this.firestore, 'posts');
+    return from(addDoc(postsRef, post)).pipe(
+      map(docRef => ({ ...post, id: docRef.id })) // return blog with Firestore ID
+    );
   }
 
   getPostsByCategory(categorySlug: string): Observable<any[]> {
@@ -30,7 +32,7 @@ export class BlogQueryService {
   getPostBySlug(slug: string): Observable<Blog> {
     const postsRef = collection(this.firestore, 'posts');
     const q = query(postsRef, where('slug', '==', slug));
-  
+
     return from(getDocs(q)).pipe(
       map(snapshot => {
         if (!snapshot.empty) {

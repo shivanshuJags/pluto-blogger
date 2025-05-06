@@ -13,3 +13,7 @@ export const loadBlogsByAuthor = createAction('[Blog] Load Blogs By Author', pro
 export const loadBlogsByCategory = createAction('[Blog] Load Blogs By Category', props<{ category: string }>());
 export const loadTopRatedBlogs = createAction('[Blog] Load Top Rated Blogs');
 export const loadTrendingBlogs = createAction('[Blog] Load Trending Blogs');
+
+export const createBlog = createAction('[Blog] Create Blog', props<{ blog: Blog }>());
+export const createBlogSuccess = createAction('[Blog] Create Blog Success', props<{ blog: Blog }>());
+export const createBlogFailure = createAction('[Blog] Create Blog Failure', props<{ error: any }>());

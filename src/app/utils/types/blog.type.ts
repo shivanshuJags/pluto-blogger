@@ -25,3 +25,9 @@ export interface Category {
     slug: string;
     id: string;
 }
+
+export interface BlogState {
+    blogs: Blog[];
+    selectedBlog: Blog | null;
+    error: any;
+}

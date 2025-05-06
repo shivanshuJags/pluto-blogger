@@ -1,9 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Editor, NgxEditorMenuComponent, NgxEditorModule, Toolbar } from 'ngx-editor';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BlogQueryService } from '../../core/services/graphql/blog-query.service';
+import { ngXtoolbar } from '../../utils/types/ngxEditor.type';
+import { Blog } from '../../utils/types/blog.type';
+import { selectAuthState } from '../../utils/store/auth/auth.selectors';
+import { AuthState } from '../../utils/types/auth.type';
+import * as BlogActions from '../../utils/store/blogs/blog.actions';
+import { selectBlogError } from '../../utils/store/blogs/blog.selectors';
 
 @Component({
   selector: 'app-create-blog',
@@ -20,19 +27,11 @@ export class CreateBlogComponent {
   previewData: any = null;
   categories: Array<{ id: string; name: string }> = [];
 
-  toolbar: Toolbar = [
-    ['bold', 'italic'],
-    ['underline', 'strike'],
-    ['code', 'blockquote'],
-    ['ordered_list', 'bullet_list'],
-    [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
-    ['link'],
-    ['text_color', 'background_color'],
-    ['align_left', 'align_center', 'align_right', 'align_justify'],
-  ];
+  toolbar: Toolbar = ngXtoolbar;
+  user: AuthState | null = null;
 
   constructor(private fb: FormBuilder, private sanitizer: DomSanitizer,
-    private blogQueryService: BlogQueryService
+    private blogQueryService: BlogQueryService, private store: Store
   ) { }
 
   ngOnInit(): void {
@@ -52,6 +51,10 @@ export class CreateBlogComponent {
       error: (err) => {
         console.error('Failed to load categories:', err);
       },
+    });
+
+    this.store.select(selectAuthState).subscribe(user => {
+      this.user = user;
     });
   }
 
@@ -132,12 +135,42 @@ export class CreateBlogComponent {
       status: this.status,
     };
 
-    this.blogQueryService.createPost(post).then((res) => {
-      this.previewMode = false;
-      this.postForm.reset();
-    }).catch((err) => {
-      console.error('Error saving post to Firestore:', err);
+    const newPost: Blog = {
+      title: this.previewData.title,
+      description: this.previewData.description,
+      content: this.previewData.editorContent,
+      image: 'assets/images/js_concepts_300.webp',
+      categories: selectedCategories,
+      categorySlugs: categorySlugs,
+      author: this.user?.name ?? 'Anonymous',
+      author_slug: this.user?.name?.toLowerCase().replace(/\s+/g, '-'),
+      createdAt: new Date() as any,
+      readTime: this.calculateReadTime(this.previewData.editorContent), // or calculate from content
+      rating: 0,
+      trending: false,
+      slug: this.previewData.title.toLowerCase().replace(/\s+/g, '-')
+    };
+
+    this.store.dispatch(BlogActions.createBlog({ blog: newPost }));
+
+    this.store.select(selectBlogError).subscribe(error => {
+      if (error) {
+        alert('Failed to create blog: ' + error.message);
+      }
     });
+  }
+
+  calculateReadTime(content: string): string {
+    const plainText = this.stripHtml(content);
+    const wordCount = plainText.trim().split(/\s+/).length;
+    const minutes = Math.ceil(wordCount / 200);
+    return `${minutes} min`;
+  }
+
+  stripHtml(html: string): string {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
   }
 
   editPost() {

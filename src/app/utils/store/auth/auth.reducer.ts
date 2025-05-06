@@ -2,28 +2,34 @@ import { createReducer, on } from '@ngrx/store';
 import * as AuthActions from './auth.actions';
 import { AuthState } from '../../types/auth.type';
 
-export const initialState: AuthState = {
-  uid: null,
-  name: null,
-  email: null,
-  photoURL: null,
-};
+const sessionUser = sessionStorage.getItem('user');
+export const initialState: AuthState = sessionUser
+  ? JSON.parse(sessionUser)
+  : {
+    uid: null,
+    name: null,
+    email: null,
+    photoURL: null
+  };
 
 export const authReducer = createReducer(
   initialState,
 
-  // Set user info
-  on(AuthActions.setUser, (state, { uid, name, email, photoURL }) => ({
-    ...state,
-    uid,
-    name,
-    email,
-    photoURL,
-  })),
+  on(AuthActions.setUser, (state, user) => {
+    const userData = { ...user };
+    sessionStorage.setItem('user', JSON.stringify(userData));
+    return { ...state, ...userData };
+  }),
 
-  // Clear user info
-  on(AuthActions.clearUser, () => initialState),
+  on(AuthActions.clearUser, () => {
+    sessionStorage.removeItem('user');
+    return {
+      uid: null,
+      name: null,
+      email: null,
+      photoURL: null
+    };
+  }),
 
-  // Also handle logout as a store-clearing action
   on(AuthActions.logout, () => initialState)
 );
