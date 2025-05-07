@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Firestore, collectionData, collection, query, where, collection as firestoreCollection } from '@angular/fire/firestore';
 import { from, map, Observable } from 'rxjs';
 import { Category } from '../types/blogs.type';
@@ -9,7 +9,7 @@ import { Blog } from '../../../utils/types/blog.type';
   providedIn: 'root'
 })
 export class BlogQueryService {
-  constructor(private firestore: Firestore) { }
+  private firestore = inject(Firestore);
 
   getCategories(): Observable<Category[]> {
     const categoriesRef = collection(this.firestore, 'categories');

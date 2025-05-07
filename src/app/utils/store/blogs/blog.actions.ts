@@ -22,3 +22,18 @@ export const setSelectedBlog = createAction(
     '[Blog] Set Selected Blog',
     props<{ blog: Blog }>()
 );
+
+export const saveDraft = createAction(
+    '[Blog Editor] Save Draft',
+    props<{ blog: Partial<Blog> }>()
+);
+
+export const saveDraftSuccess = createAction(
+    '[Blog API] Save Draft Success',
+    props<{ blog: Blog }>()
+);
+
+export const saveDraftFailure = createAction(
+    '[Blog API] Save Draft Failure',
+    props<{ error: any }>()
+);
