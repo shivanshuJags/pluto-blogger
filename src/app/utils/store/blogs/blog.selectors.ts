@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { BlogState } from '../../types/blog.type';
+import { Blog, BlogState } from '../../types/blog.type';
+import { selectAuthState } from '../auth/auth.selectors';
 
 export const selectBlogState = createFeatureSelector<BlogState>('blog');
 
@@ -30,4 +31,17 @@ export const selectSelectedBlog = createSelector(
 export const selectBlogError = createSelector(
     selectBlogState,
     state => state.error
+);
+
+export const selectCurrentUserId = createSelector(
+    selectAuthState,
+    (state) => state?.uid ?? undefined
+);
+
+export const selectDraftBlogsByCurrentUser = createSelector(
+    selectAllBlogs,
+    selectCurrentUserId,
+    (blogs: Blog[], uid: string | undefined) => {
+        return blogs.filter(blog => blog.status === 'draft' && blog.author_id === uid);
+    }
 );

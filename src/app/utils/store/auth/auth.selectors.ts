@@ -18,3 +18,8 @@ export const selectAuthUser = createSelector(
   selectAuthState,
   (state: AuthState) => state
 );
+
+export const selectCurrentUserId = createSelector(
+  selectAuthState,
+  (state) => state?.uid ?? ''
+);

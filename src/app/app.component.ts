@@ -14,6 +14,7 @@ import { FooterComponent } from './layout/footer/footer.component';
 })
 export class AppComponent {
   showLayout: boolean = true;
+  showFooter: boolean = false;
   title: string = 'plutoblogger';
 
   constructor(private router: Router) {
@@ -22,6 +23,11 @@ export class AppComponent {
       .subscribe((event: NavigationEnd) => {
         const hiddenRoutes = ['/login'];
         this.showLayout = !hiddenRoutes.includes(event.urlAfterRedirects);
+        if (['/my-profile'].includes(event.urlAfterRedirects)) {
+          this.showFooter = false;
+        } else {
+          this.showFooter = true;
+        }
       });
   }
 }
