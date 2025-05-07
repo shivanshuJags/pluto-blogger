@@ -16,6 +16,10 @@ export const blogReducer = createReducer(
         ...state,
         selectedBlog: blog
     })),
+    on(BlogActions.setSelectedBlog, (state, { blog }) => ({
+        ...state,
+        selectedBlog: blog
+    })),
     on(BlogActions.createBlogSuccess, (state, { blog }) => ({
         ...state,
         blogs: [blog, ...state.blogs],

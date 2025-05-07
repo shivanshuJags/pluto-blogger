@@ -9,7 +9,13 @@ export const initialState: AuthState = sessionUser
     uid: null,
     name: null,
     email: null,
-    photoURL: null
+    photoURL: null,
+    phone: null,
+    city: null,
+    state: null,
+    zip: null,
+    country: null,
+    bio: null
   };
 
 export const authReducer = createReducer(
@@ -30,6 +36,8 @@ export const authReducer = createReducer(
       photoURL: null
     };
   }),
+
+  on(AuthActions.loadAuthorProfileSuccess, (state, { user }) => ({ ...state, ...user })),
 
   on(AuthActions.logout, () => initialState)
 );

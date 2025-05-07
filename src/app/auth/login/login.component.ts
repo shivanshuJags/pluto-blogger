@@ -19,6 +19,10 @@ export class LoginComponent {
   authForm!: FormGroup;
   isSigninFlow: boolean = true;
   readonly LogInIcon = LogInIcon;
+  toast = {
+    message: '',
+    visible: false
+  };
 
   constructor(private authService: AuthService, private fb: FormBuilder) { }
 
@@ -34,6 +38,16 @@ export class LoginComponent {
     });
 
     this.updateConfirmPasswordValidator();
+  }
+
+  showToast(message: string): void {
+    this.toast.message = message;
+    this.toast.visible = true;
+
+    setTimeout(() => {
+      this.toast.visible = false;
+      setTimeout(() => this.toast.message = '', 300);
+    }, 3000);
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -85,12 +99,26 @@ export class LoginComponent {
       this.toggleFlow();
     }
   }
+
   loginWithGoogle(): void {
     this.authService.signInWithGoogle();
   }
 
   loginWithGitHub(): void {
     this.authService.signInWithGitHub();
+  }
+
+  forgotPassword(): void {
+    const email = this.authForm.get('email')?.value;
+    if (!email || this.f['email'].invalid) {
+      this.authForm.get('email')?.markAsTouched();
+      this.showToast('Please enter a valid email to reset your password.');
+      return;
+    }
+
+    this.authService.resetPassword(email)
+      .then(() => this.showToast('Password reset email sent!'))
+      .catch(() => this.showToast('Failed to send password reset email. Please try again.'));
   }
 
   async loginWithPhone(): Promise<void> {

@@ -1,6 +1,8 @@
 import { Timestamp } from "firebase/firestore";
 
 export interface Blog {
+    id?:string;
+    status?:string;
     title: string;
     content: string;
     image: string;
@@ -9,6 +11,7 @@ export interface Blog {
     categorySlugs?: string[];
     author: string;
     author_slug?: string;
+    author_id?:string;
     date?: string;
     readTime?: string;
     description?: string;
@@ -17,8 +20,6 @@ export interface Blog {
     rating?: number;
     trending?: boolean;
     [key: string]: any;
-    id?:string;
-    status:string
 }
 
 export interface Category {

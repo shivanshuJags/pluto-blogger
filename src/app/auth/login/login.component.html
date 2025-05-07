@@ -12,6 +12,12 @@
         Make a new doc to bring your words, data, and teams together. For free
       </p>
 
+      <div *ngIf="toast.message"
+        class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-md shadow-lg transition-opacity duration-300 z-50"
+        [ngClass]="{ 'opacity-100': toast.visible, 'opacity-0': !toast.visible }">
+        {{ toast.message }}
+      </div>
+
       <!-- Email input -->
       <input type="email" formControlName="email" placeholder="Email"
         [ngClass]="{ 'border-red-500': f['email'].invalid && f['email'].touched }"
@@ -39,7 +45,8 @@
         <span *ngIf="f['confirmPassword'].errors?.['mismatch']">Passwords must match.</span>
       </div>
 
-      <div class="text-right text-sm text-light-accent dark:text-dark-accent mb-4 cursor-pointer hover:underline">
+      <div *ngIf="isSigninFlow" (click)="forgotPassword()"
+        class="text-right text-sm text-light-accent dark:text-dark-accent mb-4 cursor-pointer hover:underline">
         Forgot password?
       </div>
 

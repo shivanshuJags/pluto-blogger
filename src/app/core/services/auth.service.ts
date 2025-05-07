@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Auth, GoogleAuthProvider, signInWithPhoneNumber, signInWithPopup, signOut } from '@angular/fire/auth';
-import { getAuth, RecaptchaVerifier, ConfirmationResult, createUserWithEmailAndPassword, UserCredential, signInWithEmailAndPassword, GithubAuthProvider } from 'firebase/auth';
+import { getAuth, RecaptchaVerifier, ConfirmationResult, createUserWithEmailAndPassword, UserCredential, signInWithEmailAndPassword, GithubAuthProvider, sendPasswordResetEmail } from 'firebase/auth';
 
 import * as AuthActions from '../../utils/store/auth/auth.actions';
+import { doc, setDoc } from 'firebase/firestore';
+import { docData, Firestore } from '@angular/fire/firestore';
+import { AuthState } from '../../utils/types/auth.type';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +20,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<any>(this.getUserData());
   user$ = this.userSubject.asObservable();
 
-  constructor(private auth: Auth, private router: Router, private store: Store) { }
+  constructor(private auth: Auth, private router: Router, private store: Store, private firestore: Firestore) { }
 
   async signUpWithEmail(email: string, password: string): Promise<UserCredential> {
     const auth = getAuth();
@@ -65,6 +68,19 @@ export class AuthService {
     } catch (error) {
       console.error('Email sign-in error:', error);
       throw error;
+    }
+  }
+
+  async resetPassword(email: string): Promise<void> {
+    const auth = getAuth();
+    const actionCodeSettings = {
+      url: `${window.location.origin}/login`,
+      handleCodeInApp: false
+    };
+    try {
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
+    } catch (error) {
+      console.error('Password reset error:', error);
     }
   }
 
@@ -144,6 +160,16 @@ export class AuthService {
       console.error('OTP verification failed:', error);
       throw error;
     });
+  }
+
+  updateAuthorProfile(uid: string, profileData: AuthState): Observable<void> {
+    const docRef = doc(this.firestore, 'author', uid);
+    return from(setDoc(docRef, profileData, { merge: true }));
+  }
+
+  getAuthorById(uid: string): Observable<AuthState> {
+    const ref = doc(this.firestore, 'author', uid);
+    return docData(ref) as Observable<AuthState>;
   }
 
   logout() {

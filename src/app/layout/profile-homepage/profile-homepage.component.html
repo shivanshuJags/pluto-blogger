@@ -1,0 +1,11 @@
+<div class="min-h-screen bg-[#f9f8fc] flex text-gray-800 dark:bg-dark-background dark:text-white">
+    <app-sidebar (tabChange)="activeTab = $event"></app-sidebar>
+
+    <main class="bg-[#f9f8fc] flex-1 p-8 dark:bg-dark-surface">
+        <ng-container [ngSwitch]="activeTab">
+            <app-edit-profile *ngSwitchCase="'profile'"></app-edit-profile>
+            <app-blog-drafts *ngSwitchCase="'drafts'"></app-blog-drafts>
+            <div *ngSwitchDefault>Please select a tab</div>
+        </ng-container>
+    </main>
+</div>

@@ -1,0 +1,70 @@
+<section>
+    <h2 class="text-2xl font-bold mb-6">Edit Profile</h2>
+
+    <div class="flex flex-col items-center mb-6">
+        <div class="relative group">
+            <img [src]="profileImagePreview" alt="Profile"
+                class="w-24 h-24 rounded-full border-4 border-white shadow object-cover" />
+
+            <button type="button" (click)="triggerFileInput()"
+                class="absolute bottom-0 right-0 bg-purple-600 text-white rounded-full p-1 hover:bg-purple-700 transition">
+                ✏️
+            </button>
+            <input #fileInput type="file" accept="image/*" (change)="onImageSelected($event)" hidden />
+        </div>
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()"
+        class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+            <label class="block mb-1 text-sm font-medium">Full Name</label>
+            <input formControlName="name" type="text"
+                class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400" />
+        </div>
+        <div>
+            <label class="block mb-1 text-sm font-medium">Email</label>
+            <input formControlName="email" type="email"
+                class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400" />
+        </div>
+        <div>
+            <label class="block mb-1 text-sm font-medium">Phone</label>
+            <input formControlName="phone" type="text"
+                class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400" />
+        </div>
+        <div>
+            <label class="block mb-1 text-sm font-medium">City</label>
+            <input formControlName="city" type="text"
+                class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400" />
+        </div>
+        <div>
+            <label class="block mb-1 text-sm font-medium">State</label>
+            <input formControlName="state" type="text"
+                class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400" />
+        </div>
+        <div>
+            <label class="block mb-1 text-sm font-medium">Zip Code</label>
+            <input formControlName="zip" type="text"
+                class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400" />
+        </div>
+        <div class="sm:col-span-2">
+            <label class="block mb-1 text-sm font-medium">Country</label>
+            <input formControlName="country" type="text"
+                class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400" />
+        </div>
+
+        <div class="sm:col-span-2">
+            <label class="block mb-1 text-sm font-medium">Bio</label>
+            <textarea formControlName="bio" rows="4" placeholder="Tell us something about yourself"
+                class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-purple-400"></textarea>
+        </div>
+
+
+        <div class="sm:col-span-2 flex justify-center gap-4 mt-6">
+            <button type="button"
+                class="px-6 py-2 rounded-md border border-purple-600 text-purple-600 hover:bg-purple-50">Back
+                to Home</button>
+            <button type="submit" class="px-6 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700">Save
+                Changes</button>
+        </div>
+    </form>
+</section>

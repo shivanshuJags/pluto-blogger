@@ -18,6 +18,11 @@ export const createBlog = createAction('[Blog] Create Blog', props<{ blog: Blog 
 export const createBlogSuccess = createAction('[Blog] Create Blog Success', props<{ blog: Blog }>());
 export const createBlogFailure = createAction('[Blog] Create Blog Failure', props<{ error: any }>());
 
+export const setSelectedBlog = createAction(
+    '[Blog] Set Selected Blog',
+    props<{ blog: Blog }>()
+);
+
 export const saveDraft = createAction(
     '[Blog Editor] Save Draft',
     props<{ blog: Partial<Blog> }>()
