@@ -1,90 +1,106 @@
-<div class="max-w-4xl mx-auto p-6 space-y-6">
-    <h1 class="text-3xl font-bold">Create New Post</h1>
+<div class="min-h-screen bg-[#f9f8fc] dark:bg-dark-background text-light-text dark:text-dark-text px-4 py-6">
+    <div
+        class="bg-white dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
 
-    <!-- Preview Mode -->
-    <div *ngIf="previewMode; else editorForm" class="space-y-6">
-        <h2 class="text-2xl font-semibold">🔍 Preview Your Post</h2>
-        <div class="border p-4 rounded-md bg-white shadow">
-            <p class="text-sm text-gray-600 mb-2">Category: {{ previewData?.category }}</p>
-            <h2 class="text-3xl font-bold mb-4">{{ previewData?.title }}</h2>
-            <!-- Tailwind Typography applied here -->
-            <div class="prose max-w-none" [innerHTML]="getSanitizedContent(previewData?.editorContent)"></div>
+        <!-- Top Bar -->
+        <div class="flex justify-between items-center px-4 py-3 border-b border-gray-200 dark:border-gray-600">
+            <h1 class="text-lg font-semibold">
+                {{ showPreview ? 'Preview Blog Post' : 'New Blog Post' }}
+            </h1>
+            <div class="flex gap-2">
+                <button *ngIf="!showPreview" type="button"
+                    class="px-4 py-2 border rounded-md font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
+                    (click)="preview()">Preview</button>
+
+                <button *ngIf="showPreview" type="button"
+                    class="px-4 py-2 border rounded-md font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
+                    (click)="edit()">Back to Edit</button>
+
+                <button type="button"
+                    class="px-4 py-2 border rounded-md font-medium bg-yellow-500 text-white hover:bg-yellow-600"
+                    (click)="saveDraft()">Save Draft</button>
+                <button type="button"
+                    class="px-4 py-2 rounded-md font-medium bg-green-600 text-white hover:bg-green-700"
+                    (click)="publish()">Publish</button>
+            </div>
         </div>
 
-        <div class="flex gap-4 mt-6">
-            <button (click)="confirmPublish()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
-                Confirm & Publish
-            </button>
-            <button (click)="editPost()" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
-                Edit Post
-            </button>
-        </div>
-    </div>
+        <!-- Blog Form -->
+        <form *ngIf="!showPreview" [formGroup]="blogForm" class="px-6 py-5">
+            <!-- Title -->
+            <input formControlName="title" type="text" placeholder="Enter blog title"
+                class="w-full text-2xl font-bold bg-transparent border-none focus:outline-none mb-4 dark:placeholder-gray-500 placeholder-gray-400" />
 
-    <!-- Editor Form -->
-    <ng-template #editorForm>
-        <form [formGroup]="postForm" (ngSubmit)="publishNow()" class="space-y-6">
-            <input type="text" formControlName="title" placeholder="Your post title..."
-                class="w-full p-3 border border-gray-300 rounded-md text-lg font-semibold" />
+            <!-- Subtitle -->
+            <input formControlName="subtitle" type="text" placeholder="Enter subtitle"
+                class="w-full text-md font-medium bg-transparent border-none focus:outline-none mb-6 dark:placeholder-gray-500 placeholder-gray-400" />
 
-            <!-- Description Input -->
-            <textarea formControlName="description" placeholder="Short description..."
-                class="w-full p-3 border border-gray-300 rounded-md text-base" rows="3"></textarea>
+            <!-- NgxEditor -->
+            <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+            <ngx-editor formControlName="content" [editor]="editor"
+                class="mt-2 min-h-[300px] dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-dark-background text-black dark:text-white prose dark:prose-invert">
+            </ngx-editor>
 
-            <div class="relative">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Select Categories</label>
+            <!-- Tags -->
+            <div class="mt-6">
+                <input formControlName="tags" type="text" placeholder="#tags (comma separated)"
+                    class="w-full px-3 py-2 border rounded-md text-sm dark:bg-dark-background dark:text-white" />
+            </div>
 
-                <!-- Selected categories as tags -->
+            <!-- Category Section -->
+            <div class="mt-6 relative">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Categories</label>
                 <div class="flex flex-wrap gap-2 mb-2">
-                    <span *ngFor="let catId of postForm.get('category')?.value"
+                    <span *ngFor="let catId of blogForm.get('category')?.value"
                         class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full flex items-center gap-1">
                         {{ getCategoryNameById(catId) }}
                         <button type="button" (click)="removeCategory(catId)"
-                            class="text-blue-600 hover:text-red-600 font-bold">
-                            ×
-                        </button>
+                            class="text-blue-600 hover:text-red-600 font-bold">×</button>
                     </span>
                 </div>
-
-                <!-- Dropdown to add categories -->
                 <select (change)="addCategory($event)" class="w-full p-2 border rounded-md">
                     <option disabled selected>Select category to add</option>
-                    <option *ngFor="let cat of categories" [value]="cat.id"
-                        [disabled]="postForm.get('category')?.value.includes(cat.id)">
+                    <option *ngFor="let cat of categories$ | async" [value]="cat.id"
+                        [disabled]="blogForm.get('category')?.value.includes(cat.id)">
                         {{ cat.name }}
                     </option>
                 </select>
             </div>
 
-            <div class="border border-gray-300 rounded-md overflow-hidden">
-                <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
-                <button type="button" class="mt-2 mb-2 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                    (click)="triggerImageUpload()">
-                    📷 Upload Image
-                </button>
-                <ngx-editor [editor]="editor" formControlName="editorContent" class="min-h-[700px] p-4"></ngx-editor>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <label class="text-sm font-medium">Schedule for:</label>
-                <input type="datetime-local" formControlName="scheduleDate"
-                    class="p-2 border border-gray-300 rounded-md" />
-                <button type="button" (click)="schedulePost()"
-                    class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
-                    Schedule
-                </button>
-            </div>
-
-            <div class="flex gap-4">
-                <button type="button" (click)="saveAsDraft()"
-                    class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
-                    Save Draft
-                </button>
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                    [disabled]="postForm.invalid">
-                    Publish
-                </button>
+            <!-- Thumbnail Upload -->
+            <div class="my-6">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Blog Thumbnail</label>
+                <div *ngIf="thumbnailPreview" class="mb-3">
+                    <img [src]="thumbnailPreview" alt="Thumbnail preview"
+                        class="w-full max-h-64 object-cover rounded-lg border" />
+                    <button type="button" (click)="removeThumbnail()"
+                        class="mt-2 text-sm text-red-600 hover:underline">Remove</button>
+                </div>
+                <input #thumbnailInput type="file" accept="image/*" (change)="onThumbnailSelected($event)"
+                    class="block w-full text-sm rounded-md border border-gray-300 text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-light-muted dark:file:bg-dark-code file:text-black hover:file:bg-gray-100" />
             </div>
         </form>
-    </ng-template>
+
+        <!-- Preview Section -->
+        <div *ngIf="showPreview" class="px-6 py-6">
+            <h2 class="text-3xl font-bold mb-2">{{ blogForm.get('title')?.value }}</h2>
+            <p class="text-md text-gray-600 mb-4">{{ blogForm.get('subtitle')?.value }}</p>
+
+            <img *ngIf="thumbnailPreview" [src]="thumbnailPreview"
+                class="w-full rounded-lg mb-6 max-h-72 object-cover" />
+
+            <div [innerHTML]="sanitizedContent" class="prose max-w-none dark:prose-invert"></div>
+
+            <div class="mt-6 text-sm text-gray-500">
+                <p>Tags: {{ blogForm.get('tags')?.value }}</p>
+                <p>
+                    Categories:
+                    <span *ngFor="let id of blogForm.get('category')?.value; let i = index">
+                        {{ getCategoryNameById(id) }}<span *ngIf="i < blogForm.get('category')?.value.length - 1">,
+                        </span>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
 </div>

@@ -18,6 +18,7 @@ export interface Blog {
     trending?: boolean;
     [key: string]: any;
     id?:string;
+    status:string
 }
 
 export interface Category {

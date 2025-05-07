@@ -17,3 +17,18 @@ export const loadTrendingBlogs = createAction('[Blog] Load Trending Blogs');
 export const createBlog = createAction('[Blog] Create Blog', props<{ blog: Blog }>());
 export const createBlogSuccess = createAction('[Blog] Create Blog Success', props<{ blog: Blog }>());
 export const createBlogFailure = createAction('[Blog] Create Blog Failure', props<{ error: any }>());
+
+export const saveDraft = createAction(
+    '[Blog Editor] Save Draft',
+    props<{ blog: Partial<Blog> }>()
+);
+
+export const saveDraftSuccess = createAction(
+    '[Blog API] Save Draft Success',
+    props<{ blog: Blog }>()
+);
+
+export const saveDraftFailure = createAction(
+    '[Blog API] Save Draft Failure',
+    props<{ error: any }>()
+);
