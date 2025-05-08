@@ -7,10 +7,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BlogQueryService } from '../../core/services/graphql/blog-query.service';
 import { ngXtoolbar } from '../../utils/types/ngxEditor.type';
 import { Blog, Category } from '../../utils/types/blog.type';
-import { selectAuthState } from '../../utils/store/auth/auth.selectors';
+import { selectAuthState, selectAuthUser } from '../../utils/store/auth/auth.selectors';
 import { AuthState } from '../../utils/types/auth.type';
 import * as BlogActions from '../../utils/store/blogs/blog.actions';
-import { selectBlogError } from '../../utils/store/blogs/blog.selectors';
+import { selectBlogError, selectSelectedBlog } from '../../utils/store/blogs/blog.selectors';
 import { Observable } from 'rxjs';
 import { selectCategories } from '../../utils/store/categories/category.selectors';
 import * as CategoryActions from '../../utils/store/categories/category.actions';
@@ -47,8 +47,19 @@ export class CreateBlogComponent {
       title: ['', Validators.required],
       subtitle: [''],
       content: ['', Validators.required],
-      tags: [''],
       category: [[], Validators.required],
+    });
+
+    this.store.select(selectSelectedBlog).subscribe((blog) => {
+      if (blog) {
+        this.blogForm.patchValue({
+          title: blog.title,
+          subtitle: blog.description,
+          content: blog.content,
+          category: blog.categories || [],
+        });
+      }
+
     });
 
     this.store.dispatch(CategoryActions.loadCategories());
