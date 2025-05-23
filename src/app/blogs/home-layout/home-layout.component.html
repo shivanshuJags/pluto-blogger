@@ -4,7 +4,9 @@
   <div class="max-w-screen-xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
     <!-- Left Blog Section -->
     <div class="lg:col-span-8 space-y-10">
-      <app-blog-list></app-blog-list>
+      <p *ngIf="blogs.length === 0" class="text-center text-sm text-red-500">No blogs found or query param not present.
+      </p>
+      <app-blog-list [searchedBlog]="blogs"></app-blog-list>
     </div>
 
     <!-- Right Sidebar Section -->

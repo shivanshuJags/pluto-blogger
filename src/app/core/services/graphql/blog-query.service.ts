@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Firestore, collectionData, collection, query, where, collection as firestoreCollection } from '@angular/fire/firestore';
 import { from, map, Observable } from 'rxjs';
-import { Category } from '../types/blogs.type';
 import { addDoc, getDocs } from 'firebase/firestore';
+import { DocumentData } from 'firebase/firestore';
 import { Blog } from '../../../utils/types/blog.type';
+import { Category } from '../types/blogs.type';
 
 @Injectable({
   providedIn: 'root'
@@ -66,5 +67,24 @@ export class BlogQueryService {
     const postsRef = collection(this.firestore, 'posts');
     const q = query(postsRef, where('trending', '==', true));
     return collectionData(q, { idField: 'slug' }) as Observable<Blog[]>;
+  }
+
+  searchPosts(query: string): Observable<Blog[]> {
+    const postsRef = collection(this.firestore, 'posts');
+    return collectionData(postsRef, { idField: 'slug' }).pipe(
+      map((posts: DocumentData[]) =>
+        posts
+          .map(post => post as Blog)
+          .filter(post => {
+            const lowerQuery = query.toLowerCase();
+            return (
+              post.title?.toLowerCase().includes(lowerQuery) ||
+              post.author?.toLowerCase().includes(lowerQuery) ||
+              post.slug?.toLowerCase().includes(lowerQuery) ||
+              post.categorySlugs?.some(cat => cat.toLowerCase().includes(lowerQuery))
+            );
+          })
+      )
+    );
   }
 }
